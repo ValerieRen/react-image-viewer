@@ -1,23 +1,12 @@
-import logo from './logo.svg';
+import React from "react";
+import ImageViewer from "./components/ImageViewer";
 import './App.css';
 
 function App() {
+  const path = "http://content.cylindo.com/api/v2/4404/products/ARCHIBALDCHAIR/frames/{index}/";
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <ImageViewer imagePath={path} />
     </div>
   );
 }
