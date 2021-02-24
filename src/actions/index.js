@@ -1,1 +1,1 @@
-export * as default from "./Images";
+export * from "./Images";
