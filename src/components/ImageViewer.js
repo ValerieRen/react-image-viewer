@@ -2,16 +2,13 @@ import React, {useEffect, useState} from "react";
 import "./ImageViewer.css";
 import * as ImageAction from "../actions";
 import {getHDImageUrl} from "../utils/helper";
+import {MOVING_FLAG} from "../utils/constants";
 
 const ImageViewer = ({ imagePath }) => {
   const [imgIndex, setImgIndex] = useState(0);
   const [totalImages, setTotalImages] = useState(1);
   const [showZoomedImg, setShowZoomedImg] = useState(false);
-  const [clickFlag, setClickFlag] = useState(false);
-  const [startPoint, setStartPoint] = useState({
-    x: 0,
-    y: 0,
-  });
+  const [movingFlag, setMovingFlag] = useState(null);
   const [crop, setCrop] = useState({
     x: 0,
     y: 0,
@@ -42,12 +39,8 @@ const ImageViewer = ({ imagePath }) => {
   }
 
   const onMouseDown = (e) => {
-    console.log("onMouseDown");
     e.preventDefault();
-    setStartPoint({
-      x : e.clientX,
-      y : e.clientY,
-    });
+    setMovingFlag(MOVING_FLAG.CLICK);
     addListeners();
     setDragState({
       dragStartIndex: imgIndex,
@@ -58,6 +51,7 @@ const ImageViewer = ({ imagePath }) => {
 
   const onMouseMove = (e) => {
     e.preventDefault();
+    setMovingFlag(MOVING_FLAG.DRAG);
     if (showZoomedImg) {
       setCrop({
         ...crop,
@@ -80,25 +74,16 @@ const ImageViewer = ({ imagePath }) => {
   }
 
   const onMouseUp = (e) => {
-    console.log("onMouseUp");
-    // monitoring mousedown start point in order to find out the offset of mousedown and mouseup,
-    // in order to determine the mousedown behaviour is for drag or click
-    if (startPoint.x && startPoint.y) {
-      let difX = e.clientX - startPoint.x;
-      let difY = e.clientY - startPoint.y;
-      let difD = Math.sqrt(difX * difX + difY * difY)
-      // (offset in [0, 5] is click, otherwise is drag)
-      setClickFlag(difD >= 0 && difD <= 5);
+    e.preventDefault();
+    if (movingFlag === MOVING_FLAG.DRAG) {
+      removeListeners();
+      setDragState({...dragState, dragging: false});
     }
-    removeListeners();
-    setDragState({...dragState, dragging: false});
   }
 
   const onClick = (e) => {
-    console.log("onClick");
     if (dragState.dragging) return;
-    console.log("click", clickFlag, showZoomedImg);
-    if (clickFlag || showZoomedImg) {
+    if (movingFlag === MOVING_FLAG.CLICK) {
       setShowZoomedImg(!showZoomedImg);
       if (showZoomedImg) {
         setCrop({
@@ -108,7 +93,6 @@ const ImageViewer = ({ imagePath }) => {
         });
       }
     }
-    setClickFlag(false);
   };
 
   const onLoad = (e) => {
