@@ -121,7 +121,7 @@ const ImageViewer = ({ imagePath }) => {
         draggable={!showZoomedImg}
         // the src image will be shown determined if the function is for zoom or for 360 view
         src={showZoomedImg ?
-          `${getHDImageUrl(imagePath, imgIndex + 1, crop.x, crop.y, crop.width, crop.height, "1k")}` :
+          `${getHDImageUrl(imagePath, imgIndex + 1, crop.x, crop.y, crop.width, crop.height, "2k")}` :
           ImageAction.getImageImportByIndex(imagePath, imgIndex + 1)
         }
         alt="" />
