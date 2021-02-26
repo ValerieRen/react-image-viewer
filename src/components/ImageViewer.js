@@ -3,6 +3,7 @@ import "./ImageViewer.css";
 import * as ImageAction from "../actions";
 import {getHDImageUrl} from "../utils/helper";
 import {MOVING_FLAG} from "../utils/constants";
+import PropTypes from 'prop-types';
 
 const ImageViewer = ({ imagePath }) => {
   const [imgIndex, setImgIndex] = useState(0);
@@ -126,6 +127,10 @@ const ImageViewer = ({ imagePath }) => {
         alt="" />
     </div>
   );
+};
+
+ImageViewer.propTypes = {
+  imagePath: PropTypes.string.isRequired,
 };
 
 export default ImageViewer;
