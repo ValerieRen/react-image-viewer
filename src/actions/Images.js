@@ -6,9 +6,9 @@ export const getTotalNumOfImages = (imagePath) => {
   let totalNumOfImages = 1;
   const maxFramesInArr = [...Array(MAX_NUM_OF_FRAMES).keys()].reverse();
   // iterate max number of frames from biggest number
-  maxFramesInArr.forEach((index) => {
+  maxFramesInArr.forEach(async (index) => {
     const path = getImagePathByIndex(imagePath, index + 1);
-    const res = ImageAPI.checkImageExistenceByIndex(path);
+    const res = await ImageAPI.checkImageExistenceByIndex(path);
     if (res && (index + 1) > totalNumOfImages) {
       totalNumOfImages = index + 1;
     }
