@@ -1,13 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import "./ImageViewer.css";
-import * as ImageAction from "../actions";
-import {getHDImageUrl} from "../utils/helper";
+import {getHDImageUrl, getImagePathByIndex} from "../utils/helper";
 import {MOVING_FLAG} from "../utils/constants";
 import PropTypes from 'prop-types';
 
-const ImageViewer = ({ imagePath }) => {
+const ImageViewer = ({ imagePath, totalImages }) => {
   const [imgIndex, setImgIndex] = useState(0);
-  const [totalImages, setTotalImages] = useState(1);
   const [showZoomedImg, setShowZoomedImg] = useState(false);
   const [movingFlag, setMovingFlag] = useState(null);
   const [crop, setCrop] = useState({
@@ -23,11 +21,6 @@ const ImageViewer = ({ imagePath }) => {
     dragStart: 0,
     dragStartIndex: 0
   });
-
-  useEffect(() => {
-    const totalNumOfImages = ImageAction.getTotalNumOfImages(imagePath);
-    setTotalImages(totalNumOfImages);
-  }, []);
 
   const addListeners = () => {
     document.addEventListener('mousemove', onMouseMove);
@@ -111,20 +104,24 @@ const ImageViewer = ({ imagePath }) => {
 
   return (
     <div className="image-view-container">
-      <img
-        className="image-360"
-        onClick={onClick}
-        onMouseDown={onMouseDown}
-        onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp}
-        onLoad={onLoad}
-        draggable={!showZoomedImg}
-        // the src image will be shown determined if the function is for zoom or for 360 view
-        src={showZoomedImg ?
-          `${getHDImageUrl(imagePath, imgIndex + 1, crop.x, crop.y, crop.width, crop.height, "2k")}` :
-          ImageAction.getImageImportByIndex(imagePath, imgIndex + 1)
-        }
-        alt="" />
+      {[...Array(totalImages).keys()].map((cur) =>
+        <img
+          key={cur}
+          className="image-360"
+          style={{position: "absolute", zIndex: imgIndex === cur ? 1 : -1}}
+          onClick={onClick}
+          onMouseDown={onMouseDown}
+          onMouseMove={onMouseMove}
+          onMouseUp={onMouseUp}
+          onLoad={onLoad}
+          draggable={!showZoomedImg}
+          // the src image will be shown determined if the function is for zoom or for 360 view
+          src={showZoomedImg ?
+            `${getHDImageUrl(imagePath, cur + 1, crop.x, crop.y, crop.width, crop.height, "2k")}` :
+            getImagePathByIndex(imagePath, cur + 1)
+          }
+          alt="" />
+      )}
     </div>
   );
 };
@@ -133,4 +130,4 @@ ImageViewer.propTypes = {
   imagePath: PropTypes.string.isRequired,
 };
 
-export default ImageViewer;
+export default React.memo(ImageViewer);

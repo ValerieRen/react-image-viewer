@@ -6,7 +6,7 @@ function App() {
   const path = "http://content.cylindo.com/api/v2/4404/products/ARCHIBALDCHAIR/frames/{index}/";
   return (
     <div className="App">
-      <ImageViewer imagePath={path} />
+      <ImageViewer imagePath={path} totalImages={32} />
     </div>
   );
 }
