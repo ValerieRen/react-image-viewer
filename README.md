@@ -10,7 +10,7 @@
 - click the image to zoom in or zoom out
 - move the mouse when the zoomed in to see specific zoomed section 
 
-### 360 viewer
+#### 360 viewer
 
 - drag the image to view in 360 degree
 
